@@ -12,8 +12,8 @@ class NeuralNetwork:
         self.P = None #input
         self.outputlayer = None #output of hidden layer
         self.A = None # final output
-        self.n1 = None #net output N = WP
-        self.n2 = None #net output n1 = w11p1 + w21p2
+        self.n1 = None #net output N = WP n1 = w11p1 + w21p2
+        self.n2 = None #net output of last layer
         
 
         print('W1 = ' + self.W1)
@@ -54,9 +54,9 @@ class NeuralNetwork:
 
     def feedfoward(self, P):
         self.P = P
-        self.n1 = (self.W1 @ self.P) + self. bLayer[0]
+        self.n1 = (self.W1 @ self.P) + self. bLayer
         self.A = self.sig(self.n1)
-        self.n2 = (self.W2 @ self.outputlayer) + self.bLayer[1]
+        self.n2 = (self.W2 @ self.outputlayer) + self.bOutput
         self.a = self.lin(self.n2)
 
         return self.a
@@ -74,6 +74,7 @@ class NeuralNetwork:
 
     def train(self, dataset, epoch = 1000):
         ''' train network '''
+        errorAvgMin = 1
         epochList = []
         errorList = []
         errorSum = 0
@@ -85,16 +86,23 @@ class NeuralNetwork:
                 self.feedfoward(p)
                 ''' loss function returns 1x1 vector so used [0][0] '''
                 errorSum += self.loss(t, self.A)[0][0]
+                tabulate('training.csv', x1, x2, (self.A), t)
 
+                count += 1
+                self.backpropagrate(t)
 
+            epochList.append(i+1)
+            errorAvg = errorSum / count
+            errorList.append(errorAvg)
+            
+            if errorAvg < errorAvgMin:
+                errorAvgMin = errorAvg
+
+        errorSum = 0 #reset sum
+        count = 0 #reset count
     def predict(self):
         pass
 
-    def loss(self, t, A):
-        pass
-
-
-
-if __name__ == "__main__":
-    print("LESGOOOOOO")
-    pass
+    def Loss(self, t, A):
+        ''' return the error squared  '''
+        MSE = (t - A)**2
