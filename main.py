@@ -50,7 +50,7 @@ def genRandData(dataset, n=50):
     time: O((n + 1)^2), space: O((n + 1)^2)
     '''
 
-    for i in range(n):
+    for _ in range(n):
         x1 = random.random()
         x2 = random.random()
         Y = function(x1, x2)
@@ -65,11 +65,11 @@ if __name__ == "__main__":
     dataset = []
     genData(dataset)
 
-    dataset = scramble(dataset)
+    # dataset = scramble(dataset)
 
     print(dataset)
 
-    # NN = NeuralNetwork()  # create NN with 3 hidden neurons
+    NN = NeuralNetwork()  # create NN with 2 hidden neurons
 
     # NN.train(dataset, 1000)  # train the neural network
 

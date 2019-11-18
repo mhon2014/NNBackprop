@@ -39,7 +39,7 @@ def genRandData(filename, n=50):
     '''
 
     with open(filename, 'w+') as F:
-        for i in range(n):
+        for _ in range(n):
             x1 = random.random()
             x2 = random.random()
             Y = function(x1, x2)

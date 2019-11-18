@@ -289,7 +289,7 @@ dataset = scramble(dataset)
 
 # print(dataset)
 
-NN = NeuralNet(2)  # create NN with 3 hidden neurons
+NN = NeuralNet()  # create NN with 2 hidden neurons
 
 NN.train(dataset, 500)  # train the neural network
 
