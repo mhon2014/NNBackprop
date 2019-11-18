@@ -1,4 +1,6 @@
 import numpy as np
+import csv
+from datamanip import tabulate
 
 class NeuralNetwork:
     def __init__(self):
@@ -6,7 +8,7 @@ class NeuralNetwork:
 
         self.W1 = np.zeros((2,2)) #initialize weights to first layer
         self.W2 =  np.zeros((2,2)) #initialize weights to output
-        self.bLayer = np.zeros((2,2)) #initialize hidden layer bias
+        self.bLayer = np.zeros((2,1)) #initialize hidden layer bias
         self.bOutput = np.zeros((1,1)) #initialize output bias
 
         self.P = None #input
@@ -16,11 +18,15 @@ class NeuralNetwork:
         self.n2 = None #net output of last layer
         
 
-        print('W1 = ' + self.W1)
+        print('Initial Weights and Biases')
+        print(f'w1 = {self.W1}')
+        print(f'b1 = {self.bLayer}')
+        print(f'w2 = {self.W2}')
+        print(f'b2 = {self.bOutput}')
 
     def s1(self, t, s2):
-        '''sensitivity of first layer '''
-        return self.dsig(self.n1) @ np.transpose(self.w2) @ s2
+        ''' sensitivity of first layer '''
+        return self.dsig(self.n1) @ np.transpose(self.W2) @ s2
 
     def s2(self, t):
         ''' sensitivity of last layer -2*F(n)*E '''
@@ -53,23 +59,25 @@ class NeuralNetwork:
 
 
     def feedfoward(self, P):
+        ''' feed foward function to compute layers and return the output '''
         self.P = P
-        self.n1 = (self.W1 @ self.P) + self. bLayer
-        self.A = self.sig(self.n1)
+        self.n1 = (self.W1 @ self.P) + self.bLayer
+        self.outputlayer = self.sig(self.n1)
         self.n2 = (self.W2 @ self.outputlayer) + self.bOutput
-        self.a = self.lin(self.n2)
+        self.A = self.lin(self.n2)
 
-        return self.a
+        return self.A
 
     def backpropagrate(self, t, alpha=0.5):
         '''weights update'''
         s2 = self.s2(t)
         s1 = self.s1(t, s2)
 
-        self.w2 = self.w2 + -alpha * (s2 @ np.transpose(self.outputlayer))
-        self.b2 = self.b2 + -alpha * s2
-        self.w1 = self.w1 + -alpha * (s1 @ np.transpose(self.P))
-        self.b1 = self.b1 + -alpha * s1
+        '''Wnew = Wold + (-alpha)*S(A_transpose)  '''
+        self.W2 = self.W2 + -alpha * (s2 @ np.transpose(self.outputlayer))
+        self.bOutput = self.bOutput + -alpha * s2
+        self.W1 = self.W1 + -alpha * (s1 @ np.transpose(self.P))
+        self.bLayer = self.bLayer + -alpha * s1
 
 
     def train(self, dataset, epoch = 1000):
@@ -82,10 +90,10 @@ class NeuralNetwork:
 
         for i in range (epoch):
             for x1, x2, t in dataset:
-                p = np.array([x1], [x2]])
+                p = np.array([[x1], [x2]])
                 self.feedfoward(p)
                 ''' loss function returns 1x1 vector so used [0][0] '''
-                errorSum += self.loss(t, self.A)[0][0]
+                errorSum += self.Loss(t, self.A)[0][0]
                 tabulate('training.csv', x1, x2, (self.A), t)
 
                 count += 1
@@ -100,9 +108,26 @@ class NeuralNetwork:
 
         errorSum = 0 #reset sum
         count = 0 #reset count
-    def predict(self):
-        pass
+    
+    def predict(self, x1, x2):
+        ''' predict the output based on input '''
+        p = np.array([[x1], [x2]])
+        A = self.feedfoward(p)
+
+        return A   
 
     def Loss(self, t, A):
         ''' return the error squared  '''
         MSE = (t - A)**2
+        
+        return MSE
+
+    def test(self, testdata):
+        ''' test the performance'''
+        count = 0
+        for x1, x2, t in testdata:
+            A = self.predict(x1,x2)
+            error = self.Loss(t, A)
+            tabulate('data/test.csv', x1, x2, A, error)
+
+    
