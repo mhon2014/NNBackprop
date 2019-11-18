@@ -58,20 +58,21 @@ def genRandData(dataset, n=50):
 
 
 if __name__ == "__main__":
-    genRandData(testfile, 50)
+
+    randomset = []
+    genRandData(randomset)
 
     dataset = []
     genData(dataset)
 
-    dataset = dm.scramble(dataset)
+    dataset = scramble(dataset)
 
-    # print(dataset)
+    print(dataset)
 
-    NN = NeuralNetwork()  # create NN with 3 hidden neurons
+    # NN = NeuralNetwork()  # create NN with 3 hidden neurons
 
-    NN.train(dataset, 1000)  # train the neural network
+    # NN.train(dataset, 1000)  # train the neural network
 
-    testset = []
-    dm.parseData(testfile, testset)
+    # testset = []
 
-    NN.test(testset)
+    # NN.test(testset)
