@@ -3,15 +3,9 @@ import csv
 import pathlib
 from math import pi, sin
 import random
+import numpy as np
 from NNBackprop import NeuralNetwork
-
-# datafile = 'data/initial/trainingdata.txt'
-# testfile = 'data/initial/test.txt'
-
-# path = pathlib.Path(datafile)
-
-# if(not path.exists()):
-    # dm.genData(datafile, 5)
+import datamanip as dm
 
 def function(x1, x2):
     '''
@@ -56,6 +50,8 @@ def genRandData(dataset, n=50):
         Y = function(x1, x2)
         dataset.append((float(x1), float(x2), float(Y)))
 
+    dataset = np.round(dataset)
+
 
 if __name__ == "__main__":
 
@@ -65,14 +61,12 @@ if __name__ == "__main__":
     dataset = []
     genData(dataset)
 
-    # dataset = scramble(dataset)
+    dataset = scramble(dataset)
 
     print(dataset)
 
     NN = NeuralNetwork()  # create NN with 2 hidden neurons
 
-    # NN.train(dataset, 1000)  # train the neural network
+    NN.train(dataset, 1000)  # train the neural network
 
-    # testset = []
-
-    # NN.test(testset)
+    NN.test(randomset)

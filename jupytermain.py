@@ -86,10 +86,10 @@ def tabulate(csvfile, x1, x2, Y, t):
 
 
 class NeuralNetwork:
-    def __init__(self):
-        self.W1 = np.zeros((2,2)) #initialize weights to first layer
-        self.W2 =  np.zeros((2,2)) #initialize weights to output
-        self.bLayer = np.zeros((2,1)) #initialize hidden layer bias
+    def __init__(self, HL = 2):
+        self.W1 = np.zeros((HL,2)) #initialize weights to first layer
+        self.bLayer = np.zeros((HL,1)) #initialize hidden layer bias
+        self.W2 =  np.zeros((1,HL)) #initialize weights to output
         self.bOutput = np.zeros((1,1)) #initialize output bias
 
         self.P = None #input
@@ -97,7 +97,6 @@ class NeuralNetwork:
         self.A = None # final output
         self.n1 = None #net output N = WP n1 = w11p1 + w21p2
         self.n2 = None #net output of last layer
-        
 
         print('Initial Weights and Biases')
         print(f'w1 = {self.W1}')
@@ -161,7 +160,7 @@ class NeuralNetwork:
         self.bLayer = self.bLayer + -alpha * s1
 
 
-    def train(self, dataset, epoch = 1000):
+    def train(self, dataset, epoch = 1000, printFlag = False):
         ''' train network '''
         errorAvgMin = 1
         epochList = []
@@ -175,7 +174,11 @@ class NeuralNetwork:
                 self.feedfoward(p)
                 ''' loss function returns 1x1 vector so used [0][0] '''
                 errorSum += self.Loss(t, self.A)[0][0]
-                tabulate('data/training.csv', x1, x2, (self.A), t)
+
+                self.feedfoward(p)
+
+                if (printFlag):
+                    tabulate('training.csv', x1, x2, (self.A), t)
 
                 count += 1
                 self.backpropagrate(t)
@@ -187,8 +190,18 @@ class NeuralNetwork:
             if errorAvg < errorAvgMin:
                 errorAvgMin = errorAvg
 
-        errorSum = 0 #reset sum
-        count = 0 #reset count
+            errorSum = 0 #reset sum
+            count = 0 #reset count
+
+        print('Final Weights and Biases')
+        print(f'W1 = {self.W1}')
+        print(f'bLayer = {self.bLayer}')
+        print(f'W2 = {self.W2}')
+        print(f'bOutput = {self.bOutput}')
+
+        # displaying mean square error vs the epoch number
+        print(f'Min MSE: {errorAvgMin}, Avg MSE: {avg(errorList)}')
+        dispLoss(errorList, epochList)
     
     def predict(self, x1, x2):
         ''' predict the output based on input '''
@@ -203,7 +216,7 @@ class NeuralNetwork:
         
         return MSE
 
-    def test(self, testdata, testfile = 'data/test.csv', printFlag = False):
+    def test(self, testdata, testfile = 'data/test', printFlag = False):
         ''' test the performance'''
         count = 0
         if(print):
@@ -216,20 +229,16 @@ class NeuralNetwork:
                 A = self.predict(x1,x2)
                 error = self.Loss(t, A)
                 if count < 3:
-                print(f'In: ({x1},{x2}) Out: {A:.2f}, Target: {t}, Err: {err:.2f}')
+                    print(f'In: ({x1},{x2}) Out: {A:.2f}, Target: {t}, Err: {error:.2f}')
                 count += 1
-
     
-# %% Case 1 : i/5 j/5
+# %% Case 1 : i/5 j/5 Training
 '''Case 1'''
 
-datafile = 'data/trainingdata.txt'
-testfile = 'data/test.txt'
+datafile = 'data/data5/trainingdata.txt'
+testfile = 'data/data5/test.txt'
 
-path = pathlib.Path(datafile)
-
-if(not path.exists()):
-    genData(datafile, 5)
+genData(datafile, 5)
 
 genRandData(testfile, 50)
 
@@ -239,16 +248,18 @@ dataset = scramble(dataset)
 
 # print(dataset)
 
+# %% Testing 1
+
 NN = NeuralNetwork()  # create NN with 3 hidden neurons
 
-NN.train(dataset, 1000)  # train the neural network
+NN.train(dataset)  # train the neural network
 
 testset = []
 parseData(testfile, testset)
 
 NN.test(testset,'data/data5/test.csv', True)
 
-# %% Case 2 i/10 j/10
+# %% Case 2 i/10 j/10 Training
 '''Case 2 '''
 
 datafile = './data/trainingdata10.txt'
@@ -262,10 +273,10 @@ parseData(datafile, dataset)
 dataset = scramble(dataset)
 
 # print(dataset)
+# %% Testing 2
+NN = NeuralNetwork()  # create NN with 3 hidden neurons
 
-NN = NeuralNet()  # create NN with 3 hidden neurons
-
-NN.train(dataset, 500)  # train the neural network
+NN.train(dataset, 10000)  # train the neural network
 
 testset = []
 parseData(testfile, testset)
@@ -273,7 +284,7 @@ parseData(testfile, testset)
 NN.test(testset)
 
 
-# %% Case 3 random x1, and x2
+# %% Case 3 random x1, and x2 Training
 '''Case 3'''
 
 
@@ -288,10 +299,11 @@ parseData(datafile, dataset)
 dataset = scramble(dataset)
 
 # print(dataset)
+# %% Testing 3
 
-NN = NeuralNet()  # create NN with 2 hidden neurons
+NN = NeuralNetwork()  # create NN with 2 hidden neurons
 
-NN.train(dataset, 500)  # train the neural network
+NN.train(dataset, 10000)  # train the neural network
 
 testset = []
 parseData(testfile, testset)

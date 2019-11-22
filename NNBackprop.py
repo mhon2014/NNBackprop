@@ -1,14 +1,12 @@
 import numpy as np
-import csv
-from datamanip import tabulate
+import pandas as pd
+import matplotlib.pyplot as plt
 
 class NeuralNetwork:
-    def __init__(self):
-        # np.random.seed(1) ????
-
-        self.W1 = np.zeros((2,2)) #initialize weights to first layer
-        self.W2 =  np.zeros((2,2)) #initialize weights to output
-        self.bLayer = np.zeros((2,1)) #initialize hidden layer bias
+    def __init__(self, HL = 2):
+        self.W1 = np.zeros((HL,2)) #initialize weights to first layer
+        self.bLayer = np.zeros((HL,1)) #initialize hidden layer bias
+        self.W2 =  np.zeros((1,HL)) #initialize weights to output
         self.bOutput = np.zeros((1,1)) #initialize output bias
 
         self.P = None #input
@@ -16,7 +14,6 @@ class NeuralNetwork:
         self.A = None # final output
         self.n1 = None #net output N = WP n1 = w11p1 + w21p2
         self.n2 = None #net output of last layer
-        
 
         print('Initial Weights and Biases')
         print(f'w1 = {self.W1}')
@@ -76,12 +73,11 @@ class NeuralNetwork:
         '''Wnew = Wold + (-alpha)*S(A_transpose)  '''
         self.W2 = self.W2 + -alpha * (s2 @ np.transpose(self.outputlayer))
         self.bOutput = self.bOutput + -alpha * s2
-        '''first layer update a0 = P'''
         self.W1 = self.W1 + -alpha * (s1 @ np.transpose(self.P))
         self.bLayer = self.bLayer + -alpha * s1
 
 
-    def train(self, dataset, epoch = 1000):
+    def train(self, dataset, lastIteration, epoch = 1000):
         ''' train network '''
         errorAvgMin = 1
         epochList = []
@@ -94,8 +90,14 @@ class NeuralNetwork:
                 p = np.array([[x1], [x2]])
                 self.feedfoward(p)
                 ''' loss function returns 1x1 vector so used [0][0] '''
-                errorSum += self.Loss(t, self.A)[0][0]
-                tabulate('training.csv', x1, x2, (self.A), t)
+                error = self.Loss(t, self.A)[0][0]
+                errorSum += error
+
+                self.feedfoward(p)
+
+                if (i == epoch - 1):
+                    # tabulate('training.csv', x1, x2, (self.A), t)
+                    lastIteration.append((x1, x2, self.A[0][0], t, error))
 
                 count += 1
                 self.backpropagrate(t)
@@ -107,8 +109,22 @@ class NeuralNetwork:
             if errorAvg < errorAvgMin:
                 errorAvgMin = errorAvg
 
-        errorSum = 0 #reset sum
-        count = 0 #reset count
+            errorSum = 0 #reset sum
+            count = 0 #reset count
+
+        print('Final Weights and Biases')
+        print(f'W1 = {self.W1}')
+        print(f'bLayer = {self.bLayer}')
+        print(f'W2 = {self.W2}')
+        print(f'bOutput = {self.bOutput}')
+
+        # displaying mean square error vs the epoch number
+        print(f'Min MSE: {errorAvgMin}, Avg MSE: {sum(errorList)/len(errorList)}')
+
+        plt.plot(epochList, errorList)
+        plt.xlabel('Number of Epoch')
+        plt.ylabel('Mean Square Error')
+        plt.show()
     
     def predict(self, x1, x2):
         ''' predict the output based on input '''
@@ -123,20 +139,11 @@ class NeuralNetwork:
         
         return MSE
 
-    def test(self, testdata, testfile = 'data/test', printFlag = False):
+    def test(self, testdata, testlist):
         ''' test the performance'''
-        count = 0
-        if(print):
-            for x1, x2, t in testdata:
-                A = self.predict(x1,x2)
-                error = self.Loss(t, A)
-                tabulate('data/test.csv', x1, x2, A, error)
-        else :
-            for x1, x2, t in testdata:
-                A = self.predict(x1,x2)
-                error = self.Loss(t, A)
-                if count < 3:
-                    print(f'In: ({x1},{x2}) Out: {A:.2f}, Target: {t}, Err: {err:.2f}')
-                count += 1
-
+        for x1, x2, t in testdata:
+            A = self.predict(x1,x2)
+            error = self.Loss(t, A)
+            testlist.append((x1, x2, A, t, error))
+    
     
