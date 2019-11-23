@@ -69,4 +69,6 @@ if __name__ == "__main__":
 
     NN.train(dataset, 1000)  # train the neural network
 
-    NN.test(randomset)
+    testlist = []
+
+    NN.test(randomset, testlist)

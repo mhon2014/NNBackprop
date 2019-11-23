@@ -39,6 +39,21 @@ def genRandData(dataset, n=10):
 
     dataset = np.round(dataset)
 
+def plotsave(epochList, errorList, filename):
+    '''plot and save figure'''
+    plt.plot(epochList, errorList)
+    plt.xlabel('Number of Epoch')
+    plt.ylabel('Mean Square Error')
+    plt.show()
+    plt.savefig(filename)
+
+def plot(epochList, errorList):
+    '''plot and save figure'''
+    plt.plot(epochList, errorList)
+    plt.xlabel('Number of Epoch')
+    plt.ylabel('Mean Square Error')
+    plt.show()
+
 # %% Part A : i/5 j/5 generate data
 ''' Part A'''
 
@@ -52,27 +67,43 @@ lastIteration = []    #last iteration of training input and output
 
 NN = NeuralNetwork(3)  # create NN with 3 hidden units
 
-NN.train(dataset, lastIteration, 1000)  # train the neural network
+epochList = []
+errorList = []
+
+NN.train(dataset, lastIteration, epochList, errorList, 1000)  # train the neural network
 
 li = pd.DataFrame(lastIteration, columns = ['x1', 'x2', 'A', 't', 'error'])
 
 print(li)
 
-li.to_excel("/data/1000epoch/train.xlsx")
-# print(dataset)
+plot(epochList, errorList)
+
+#%% save files
+li.to_excel("data/1000epoch/train.xlsx")
+
+plotsave(epochList, errorList, 'data/1000epoch/1000train.png')
 
 # %% Train for 10000 epoch
 lastIteration = []    #last iteration of training input and output
 
 NN = NeuralNetwork(3)  # create NN with 3 hidden units
 
-NN.train(dataset, lastIteration, 10000)  # train the neural network
+epochList = []
+errorList = []
+
+NN.train(dataset, lastIteration, epochList, errorList, 10000)  # train the neural network
 
 li = pd.DataFrame(lastIteration, columns = ['x1', 'x2', 'A', 't', 'error'])
 
 print(li)
 
-li.to_excel("/data/10000epoch/train.xlsx")
+plot(epochList, errorList)
+
+# %%save files
+
+li.to_excel("data/10000epoch/train.xlsx")
+
+plotsave(epochList, errorList, 'data/10000epoch/10000train.png')
 
 # %% test on i/10 j/10 generate data
 
@@ -86,6 +117,8 @@ NN.test(testset,testlist)  # test the neural network
 
 tl = pd.DataFrame(testlist, columns = ['x1', 'x2', 'A', 't', 'error'])
 
+tl.to_excel("/data/1000epoch/test.xlsx")
+
 # %% test for 10000 epoch
 
 testlist = []
@@ -93,6 +126,8 @@ testlist = []
 NN.test(testset,testlist)  # test the neural network
 
 tl = pd.DataFrame(testlist, columns = ['x1', 'x2', 'A', 't', 'error'])
+
+tl.to_excel("/data/10000epoch/test.xlsx")
 
 # %% Part C random x1, and x2
 '''Part C'''
@@ -105,11 +140,21 @@ lastIteration = []    #last iteration of training input and output
 
 NN = NeuralNetwork(3)  # create NN with 3 hidden units
 
-NN.train(dataset, lastIteration, 1000)  # train the neural network
+epochList = []
+errorList = []
+
+NN.train(dataset, lastIteration, epochList, errorList, 1000)  # train the neural network
 
 li = pd.DataFrame(lastIteration, columns = ['x1', 'x2', 'A', 't', 'error'])
 
 print(li)
+
+plot(epochList, errorList)
+
+# %% save files
+li.to_excel("/data/random1000/train.xlsx")
+
+plotsave(epochList, errorList, '/data/random1000/train.png')
 
 
 # %% Train for 10000 epoch
@@ -117,11 +162,20 @@ lastIteration = []    #last iteration of training input and output
 
 NN = NeuralNetwork(3)  # create NN with 3 hidden units
 
-NN.train(dataset, lastIteration, 10000)  # train the neural network
+epochList = []
+errorList = []
+
+NN.train(dataset, lastIteration, epochList, errorList, 10000)  # train the neural network
 
 li = pd.DataFrame(lastIteration, columns = ['x1', 'x2', 'A', 't', 'error'])
 
 print(li)
+
+# %% save files
+
+tl.to_excel("/data/random10000/train.xlsx")
+
+plotsave(epochList, errorList, '/data/random10000/train.png')
 
 # %% test on i/10 j/10 
 

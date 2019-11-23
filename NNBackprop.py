@@ -1,6 +1,4 @@
 import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
 
 class NeuralNetwork:
     def __init__(self, HL = 2):
@@ -77,11 +75,9 @@ class NeuralNetwork:
         self.bLayer = self.bLayer + -alpha * s1
 
 
-    def train(self, dataset, lastIteration, epoch = 1000):
+    def train(self, dataset, lastIteration, epochList, errorList, epoch = 1000):
         ''' train network '''
         errorAvgMin = 1
-        epochList = []
-        errorList = []
         errorSum = 0
         count = 0
 
@@ -121,10 +117,6 @@ class NeuralNetwork:
         # displaying mean square error vs the epoch number
         print(f'Min MSE: {errorAvgMin}, Avg MSE: {sum(errorList)/len(errorList)}')
 
-        plt.plot(epochList, errorList)
-        plt.xlabel('Number of Epoch')
-        plt.ylabel('Mean Square Error')
-        plt.show()
     
     def predict(self, x1, x2):
         ''' predict the output based on input '''
