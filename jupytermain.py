@@ -83,7 +83,7 @@ print(li)
 plot(epochList, errorList)
 
 #%% save files
-li.to_excel("data/1000epoch/train.xlsx")
+li.to_excel("data/1000epoch/1000train.xlsx")
 
 plotsave(epochList, errorList, 'data/1000epoch/1000train.png')
 
@@ -94,7 +94,9 @@ NN.test(testset,testlist)  # test the neural network
 
 tl = pd.DataFrame(testlist, columns = ['x1', 'x2', 'A', 't', 'error'])
 
-tl.to_excel("data/1000epoch/test.xlsx")
+print(tl)
+
+tl.to_excel("data/1000epoch/1000test.xlsx")
 
 
 # %% Train for 10000 epoch
@@ -115,7 +117,7 @@ plot(epochList, errorList)
 
 # %%save files
 
-li.to_excel("data/10000epoch/train.xlsx")
+li.to_excel("data/10000epoch/10000train.xlsx")
 
 plotsave(epochList, errorList, 'data/10000epoch/10000train.png')
 
@@ -128,13 +130,15 @@ NN.test(testset,testlist)  # test the neural network
 
 tl = pd.DataFrame(testlist, columns = ['x1', 'x2', 'A', 't', 'error'])
 
-tl.to_excel("data/10000epoch/test.xlsx")
+print(tl)
+
+tl.to_excel("data/10000epoch/10000test.xlsx")
 
 # %% Part C random x1, and x2
 '''Part C'''
 
 dataset = []
-genRandData(dataset, 5)
+genRandData(dataset, 25)
 
 # %% generate data on i/10 j/10 
 
@@ -159,9 +163,9 @@ print(li)
 plot(epochList, errorList)
 
 # %% save files
-li.to_excel("data/random1000/train.xlsx")
+li.to_excel("data/random1000/r1000train.xlsx")
 
-plotsave(epochList, errorList, 'data/random1000/train.png')
+plotsave(epochList, errorList, 'data/random1000/r1000train.png')
 
 
 # %% test for 1000 epoch
@@ -172,7 +176,9 @@ NN.test(testset,testlist)  # test the neural network
 
 tl = pd.DataFrame(testlist, columns = ['x1', 'x2', 'A', 't', 'error'])
 
-tl.to_excel("data/random1000/test.xlsx")
+print(tl)
+
+tl.to_excel("data/random1000/r1000test.xlsx")
 
 # %% Train for 10000 epoch
 lastIteration = []    #last iteration of training input and output
@@ -192,9 +198,9 @@ plot(epochList, errorList)
 
 # %% save files
 
-tl.to_excel("data/random10000/train.xlsx")
+li.to_excel("data/random10000/train.xlsx")
 
-plotsave(epochList, errorList, 'data/random10000/train.png')
+plotsave(epochList, errorList, 'data/random10000/r10000train.png')
 
 # %% test for 10000 epoch
 
@@ -204,4 +210,8 @@ NN.test(testset,testlist)  # test the neural network
 
 tl = pd.DataFrame(testlist, columns = ['x1', 'x2', 'A', 't', 'error'])
 
-tl.to_excel("data/random10000/test.xlsx")
+print(tl)
+
+tl.to_excel("data/random10000/r10000test.xlsx")
+
+# %%
