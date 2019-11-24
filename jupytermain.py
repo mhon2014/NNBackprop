@@ -62,6 +62,11 @@ genData(dataset)
 
 dataset = scramble(dataset)
 
+# %% i/10 j/10 generate data
+
+testset = []
+genData(testset, 10)
+
 # %% Train for 1000 epoch
 lastIteration = []    #last iteration of training input and output
 
@@ -82,6 +87,16 @@ plot(epochList, errorList)
 li.to_excel("data/1000epoch/train.xlsx")
 
 plotsave(epochList, errorList, 'data/1000epoch/1000train.png')
+
+# %% test for 1000 epoch
+testlist = []
+
+NN.test(testset,testlist)  # test the neural network
+
+tl = pd.DataFrame(testlist, columns = ['x1', 'x2', 'A', 't', 'error'])
+
+tl.to_excel("data/1000epoch/test.xlsx")
+
 
 # %% Train for 10000 epoch
 lastIteration = []    #last iteration of training input and output
@@ -105,19 +120,6 @@ li.to_excel("data/10000epoch/train.xlsx")
 
 plotsave(epochList, errorList, 'data/10000epoch/10000train.png')
 
-# %% test on i/10 j/10 generate data
-
-testset = []
-genData(testset, 10)
-
-# %% test for 1000 epoch
-testlist = []
-
-NN.test(testset,testlist)  # test the neural network
-
-tl = pd.DataFrame(testlist, columns = ['x1', 'x2', 'A', 't', 'error'])
-
-tl.to_excel("/data/1000epoch/test.xlsx")
 
 # %% test for 10000 epoch
 
@@ -127,13 +129,19 @@ NN.test(testset,testlist)  # test the neural network
 
 tl = pd.DataFrame(testlist, columns = ['x1', 'x2', 'A', 't', 'error'])
 
-tl.to_excel("/data/10000epoch/test.xlsx")
+tl.to_excel("data/10000epoch/test.xlsx")
 
 # %% Part C random x1, and x2
 '''Part C'''
 
 dataset = []
 genRandData(dataset, 5)
+
+# %% generate data on i/10 j/10 
+
+testset = []
+genData(testset, 10)
+
 
 # %% Train for 1000 epoch
 lastIteration = []    #last iteration of training input and output
@@ -157,6 +165,16 @@ li.to_excel("/data/random1000/train.xlsx")
 plotsave(epochList, errorList, '/data/random1000/train.png')
 
 
+# %% test for 1000 epoch
+
+testlist = []
+
+NN.test(testset,testlist)  # test the neural network
+
+tl = pd.DataFrame(testlist, columns = ['x1', 'x2', 'A', 't', 'error'])
+
+tl.to_excel("data/random1000/test.xlsx")
+
 # %% Train for 10000 epoch
 lastIteration = []    #last iteration of training input and output
 
@@ -177,19 +195,6 @@ tl.to_excel("/data/random10000/train.xlsx")
 
 plotsave(epochList, errorList, '/data/random10000/train.png')
 
-# %% test on i/10 j/10 
-
-testset = []
-genData(testset, 10)
-
-# %% test for 1000 epoch
-
-testlist = []
-
-NN.test(testset,testlist)  # test the neural network
-
-tl = pd.DataFrame(testlist, columns = ['x1', 'x2', 'A', 't', 'error'])
-
 # %% test for 10000 epoch
 
 testlist = []
@@ -198,3 +203,4 @@ NN.test(testset,testlist)  # test the neural network
 
 tl = pd.DataFrame(testlist, columns = ['x1', 'x2', 'A', 't', 'error'])
 
+tl.to_excel("data/random10000/test.xlsx")
