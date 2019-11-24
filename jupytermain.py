@@ -44,7 +44,6 @@ def plotsave(epochList, errorList, filename):
     plt.plot(epochList, errorList)
     plt.xlabel('Number of Epoch')
     plt.ylabel('Mean Square Error')
-    plt.show()
     plt.savefig(filename)
 
 def plot(epochList, errorList):
@@ -160,9 +159,9 @@ print(li)
 plot(epochList, errorList)
 
 # %% save files
-li.to_excel("/data/random1000/train.xlsx")
+li.to_excel("data/random1000/train.xlsx")
 
-plotsave(epochList, errorList, '/data/random1000/train.png')
+plotsave(epochList, errorList, 'data/random1000/train.png')
 
 
 # %% test for 1000 epoch
@@ -189,11 +188,13 @@ li = pd.DataFrame(lastIteration, columns = ['x1', 'x2', 'A', 't', 'error'])
 
 print(li)
 
+plot(epochList, errorList)
+
 # %% save files
 
-tl.to_excel("/data/random10000/train.xlsx")
+tl.to_excel("data/random10000/train.xlsx")
 
-plotsave(epochList, errorList, '/data/random10000/train.png')
+plotsave(epochList, errorList, 'data/random10000/train.png')
 
 # %% test for 10000 epoch
 

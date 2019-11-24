@@ -134,7 +134,7 @@ class NeuralNetwork:
     def test(self, testdata, testlist):
         ''' test the performance'''
         for x1, x2, t in testdata:
-            A = self.predict(x1,x2)
+            A = self.predict(x1,x2)[0][0]
             error = self.Loss(t, A)
             testlist.append((x1, x2, A, t, error))
     
