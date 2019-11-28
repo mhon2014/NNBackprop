@@ -1,6 +1,6 @@
-# Jupyter style runtime for report test cases
+# Jupyter notebook cases
 
-# %% Prep
+# %% Run first cell to make sure all functions exist for the next cells
 import numpy as np
 import matplotlib.pyplot as plt
 from math import sin, pi

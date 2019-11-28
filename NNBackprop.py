@@ -92,7 +92,6 @@ class NeuralNetwork:
                 self.feedfoward(p)
 
                 if (i == epoch - 1):
-                    # tabulate('training.csv', x1, x2, (self.A), t)
                     lastIteration.append((x1, x2, self.A[0][0], t, error))
 
                 count += 1
