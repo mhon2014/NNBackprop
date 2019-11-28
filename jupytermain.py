@@ -22,7 +22,7 @@ def genData(dataset, n=5):
             dataset.append((float(x1), float(x2), float(Y)))
 
 def scramble(old):
-    '''return a scrambled list based on old list'''
+    '''return a scrambled list based on old list used to scramble data so that the net doesn't overfit'''
     new = old[:]
     random.shuffle(new)
     return new
